@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { Text, View } from 'react-native'
 
 export default function Reminder() {
   return (
@@ -8,5 +8,3 @@ export default function Reminder() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({})
