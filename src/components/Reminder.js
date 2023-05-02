@@ -1,10 +1,14 @@
+import { View, Text } from 'react-native'
 import React from 'react'
-import { Text, View } from 'react-native'
 
-export default function Reminder() {
+const Reminder = ({ reminders }) => {
   return (
     <View>
-      <Text>Reminder</Text>
+      {reminders.map((reminder) => (
+        <Text key={reminders.indexOf(reminder)}>{reminder}</Text>
+      ))}
     </View>
   )
 }
+
+export default Reminder
