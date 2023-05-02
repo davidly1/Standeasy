@@ -1,11 +1,3 @@
-import { useNavigation } from '@react-navigation/native'
-import {
-  getAuth,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
-} from 'firebase/auth'
-import React, { useState, useEffect } from 'react'
 import {
   KeyboardAvoidingView,
   Text,
@@ -13,11 +5,20 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { useNavigation } from '@react-navigation/native'
+import {
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from 'firebase/auth'
 import { app } from '../../firebase'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState(false)
   const auth = getAuth(app)
 
   const navigation = useNavigation()
@@ -37,7 +38,10 @@ const Login = () => {
         const user = userCredentials.user
         console.log(`Registered with ${user.email}`)
       })
-      .catch((err) => console.error(err.message))
+      .catch((err) => {
+        setError(true)
+        console.error(err.message)
+      })
   }
 
   const handleSignIn = () => {
@@ -47,13 +51,16 @@ const Login = () => {
         const user = userCredential.user
         console.log(`Logged in with ${user.email}`)
       })
-      .catch((err) => console.error(err.message))
+      .catch((err) => {
+        setError(true)
+        console.error(err.message)
+      })
   }
   return (
     <KeyboardAvoidingView behavior='padding'>
       <View className='h-screen flex flex-col justify-center items-center'>
         <Text className='text-center font-medium pb-4 text-lg text-gray-800'>
-          Login
+          Login/Register
         </Text>
         <TextInput
           placeholder='Enter your email'
@@ -69,6 +76,11 @@ const Login = () => {
           value={password}
           onChangeText={(password) => setPassword(password)}
         />
+        {error && (
+          <Text className='text-red-600 text-center font-medium pt-4'>
+            Invalid email/password!
+          </Text>
+        )}
         <View className='flex flex-row gap-2 mt-4'>
           <TouchableOpacity
             className='bg-white rounded-lg p-2 mt-4 w-20'
