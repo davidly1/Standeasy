@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { getAuth, signOut } from 'firebase/auth'
-import { doc, getDoc } from 'firebase/firestore'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import { app } from '../../firebase'
 import { db } from '../../firebase'
 import Reminder from '../components/Reminder'
@@ -29,15 +29,19 @@ const Home = () => {
   useEffect(() => {
     const getReminders = async () => {
       try {
-        const userRemindersRef = doc(db, 'reminders', uid)
-        const userReminders = await getDoc(userRemindersRef)
-        if (userReminders.exists()) {
-          console.log(userReminders.data())
-          setReminders(userReminders.data().tasks)
+        // only grab users reminders
+        const userRemindersQuery = query(
+          collection(db, 'reminders'),
+          where('uid', '==', uid)
+        )
+        const storedReminders = await getDocs(userRemindersQuery)
+        storedReminders.forEach((doc) => {
+          console.log(doc.data())
+          if (!reminders.includes(doc.data().task)) {
+            setReminders([...reminders, doc.data().task])
+          }
           console.log(reminders)
-        } else {
-          console.log('none found')
-        }
+        })
       } catch (err) {
         console.error(err)
       }

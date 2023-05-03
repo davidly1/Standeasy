@@ -16,14 +16,15 @@ const AddReminder = () => {
   const uid = auth.currentUser.uid
 
   const [reminder, setReminder] = useState({
-    blockers: '',
-    tasks: ''
+    blocker: '',
+    task: ''
   })
 
   const createReminder = async () => {
-    await setDoc(doc(remindersRef, uid), {
-      blockers: ['test123'],
-      tasks: ['anothertest1']
+    await setDoc(doc(remindersRef, 'reminder1'), {
+      blocker: 'test123',
+      task: 'anothertest1',
+      uid: uid
     })
 
     // redirect user to Home screen after adding reminder
