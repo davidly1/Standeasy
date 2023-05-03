@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { getAuth } from 'firebase/auth'
@@ -17,17 +17,17 @@ const AddReminder = () => {
 
   const [reminder, setReminder] = useState({
     blocker: '',
-    task: ''
+    task: '',
+    name: ''
   })
 
   const createReminder = async () => {
-    await setDoc(doc(remindersRef, 'reminder1'), {
-      blocker: 'test123',
-      task: 'anothertest1',
+    await setDoc(doc(remindersRef, reminder.name), {
+      blocker: reminder.blocker,
+      task: reminder.task,
       uid: uid
     })
 
-    // redirect user to Home screen after adding reminder
     goHomeScreen()
   }
 
@@ -40,7 +40,31 @@ const AddReminder = () => {
       >
         <Text>Go back</Text>
       </TouchableOpacity>
-
+      <Text>Task Name</Text>
+      <TextInput
+        placeholder='Task Name'
+        className='w-4/5 bg-white rounded-xl px-4 mb-2 py-1.5'
+        value={reminder.name}
+        onChangeText={(title) => setReminder({ ...reminder, name: title })}
+      />
+      <Text>Task Description</Text>
+      <TextInput
+        placeholder='Task Description'
+        className='w-4/5 bg-white rounded-xl px-4 mb-2 py-1.5'
+        value={reminder.task}
+        onChangeText={(description) =>
+          setReminder({ ...reminder, task: description })
+        }
+      />
+      <Text>Blocker Description</Text>
+      <TextInput
+        placeholder='Blocker'
+        className='w-4/5 bg-white rounded-xl px-4 mb-2 py-1.5'
+        value={reminder.blocker}
+        onChangeText={(description) =>
+          setReminder({ ...reminder, blocker: description })
+        }
+      />
       <TouchableOpacity
         className='bg-white rounded-lg p-2 mt-4 w-32'
         onPress={createReminder}

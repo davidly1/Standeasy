@@ -23,6 +23,7 @@ const Home = () => {
       })
   }
 
+  // TODO: pass down reminders state and update it from AddReminder whenever new reminder is added
   const addReminder = () => navigation.navigate('AddReminder')
 
   // fetching reminders from Firestore
@@ -35,13 +36,9 @@ const Home = () => {
           where('uid', '==', uid)
         )
         const storedReminders = await getDocs(userRemindersQuery)
-        storedReminders.forEach((doc) => {
-          console.log(doc.data())
-          if (!reminders.includes(doc.data().task)) {
-            setReminders([...reminders, doc.data().task])
-          }
-          console.log(reminders)
-        })
+        let filteredReminders = new Set()
+        storedReminders.forEach((doc) => filteredReminders.add(doc.data().task))
+        setReminders([...filteredReminders])
       } catch (err) {
         console.error(err)
       }
@@ -64,7 +61,15 @@ const Home = () => {
       >
         <Text>Add reminder</Text>
       </TouchableOpacity>
+
       <Reminder reminders={reminders} />
+
+      <TouchableOpacity
+        className='bg-white rounded-lg p-2 mt-4 w-28'
+        onPress={() => setReminders([])}
+      >
+        <Text>Remove all reminder</Text>
+      </TouchableOpacity>
     </View>
   )
 }
