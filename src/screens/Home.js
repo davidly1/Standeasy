@@ -23,28 +23,31 @@ const Home = () => {
       })
   }
 
-  // TODO: pass down reminders state and update it from AddReminder whenever new reminder is added
   const addReminder = () => navigation.navigate('AddReminder')
 
   // fetching reminders from Firestore
-  useEffect(() => {
-    const getReminders = async () => {
-      try {
-        // only grab users reminders
-        const userRemindersQuery = query(
-          collection(db, 'reminders'),
-          where('uid', '==', uid)
-        )
-        const storedReminders = await getDocs(userRemindersQuery)
-        let filteredReminders = new Set()
-        storedReminders.forEach((doc) => filteredReminders.add(doc.data().task))
-        setReminders([...filteredReminders])
-      } catch (err) {
-        console.error(err)
-      }
+  const getReminders = async () => {
+    try {
+      // only grab users reminders
+      const userRemindersQuery = query(
+        collection(db, 'reminders'),
+        where('uid', '==', uid)
+      )
+      const storedReminders = await getDocs(userRemindersQuery)
+      let filteredReminders = new Set()
+      storedReminders.forEach((doc) => filteredReminders.add(doc.data().task))
+      setReminders([...filteredReminders])
+    } catch (err) {
+      console.error(err)
     }
-    getReminders()
-  }, [])
+  }
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getReminders()
+    })
+    return unsubscribe
+  }, [navigation])
 
   return (
     <View>
