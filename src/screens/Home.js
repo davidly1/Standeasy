@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'
 import { getAuth, signOut } from 'firebase/auth'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { app } from '../../firebase'
@@ -35,7 +36,7 @@ const Home = () => {
       )
       const storedReminders = await getDocs(userRemindersQuery)
       let filteredReminders = new Set()
-      storedReminders.forEach((doc) => filteredReminders.add(doc.data().task))
+      storedReminders.forEach((doc) => filteredReminders.add(doc.data()))
       setReminders([...filteredReminders])
     } catch (err) {
       console.error(err)
@@ -50,30 +51,21 @@ const Home = () => {
   }, [navigation])
 
   return (
-    <View>
-      <TouchableOpacity
-        className='bg-white rounded-lg p-2 mt-4 w-20'
-        onPress={handleLogout}
-      >
-        <Text className='text-center'>Logout</Text>
-      </TouchableOpacity>
+    <SafeAreaView>
+      <ScrollView>
+        <View className='flex flex-row justify-between mt-8 mx-3'>
+          <MaterialIcons name='logout' size={28} onPress={handleLogout} />
+          <MaterialIcons
+            name='add-circle-outline'
+            size={28}
+            onPress={addReminder}
+          />
+        </View>
+        <Text className='text-center font-bold text-2xl'>Home</Text>
 
-      <TouchableOpacity
-        className='bg-white rounded-lg p-2 mt-4 w-28'
-        onPress={addReminder}
-      >
-        <Text>Add reminder</Text>
-      </TouchableOpacity>
-
-      <Reminder reminders={reminders} />
-
-      <TouchableOpacity
-        className='bg-white rounded-lg p-2 mt-4 w-28'
-        onPress={() => setReminders([])}
-      >
-        <Text>Remove all reminder</Text>
-      </TouchableOpacity>
-    </View>
+        <Reminder reminders={reminders} />
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 

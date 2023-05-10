@@ -1,6 +1,7 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native'
+import { Text, TouchableOpacity, TextInput, SafeAreaView } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'
 import { getAuth } from 'firebase/auth'
 import { collection, doc, setDoc } from 'firebase/firestore'
 import { app } from '../../firebase'
@@ -32,14 +33,9 @@ const AddReminder = () => {
   }
 
   return (
-    <View>
-      <Text>AddReminder</Text>
-      <TouchableOpacity
-        className='bg-white rounded-lg p-2 mt-4 w-28'
-        onPress={goHomeScreen}
-      >
-        <Text>Go back</Text>
-      </TouchableOpacity>
+    <SafeAreaView className='mt-8 mx-3'>
+      <MaterialIcons name='arrow-back' size={28} onPress={goHomeScreen} />
+      <Text className='text-center font-bold text-2xl'>AddReminder</Text>
       <Text>Task Name</Text>
       <TextInput
         placeholder='Task Name'
@@ -71,7 +67,7 @@ const AddReminder = () => {
       >
         <Text>Add a Reminder</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   )
 }
 
