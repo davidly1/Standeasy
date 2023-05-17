@@ -1,18 +1,22 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { MaterialIcons } from '@expo/vector-icons'
 
-const Reminder = ({ reminders }) => {
+const Reminder = ({ reminders, deleteReminder }) => {
   return (
     <View className='flex flex-col'>
       {reminders.map((reminder) => (
-        <View className='border rounded-2xl p-2 m-2 bg-white'>
-          <Text
-            key={reminders.indexOf(reminder)}
-            className='font-medium text-lg'
-          >
-            {reminder.task}
-          </Text>
-          <Text className='text-red-600 pt-4'>{reminder.blocker}</Text>
+        <View
+          className='border rounded-2xl p-2 m-2 bg-white'
+          key={reminders.id}
+        >
+          <Text className='font-medium text-lg'>{reminder.task}</Text>
+          <View className='flex flex-row pt-4 justify-between'>
+            <Text className='text-red-600'>{reminder.blocker}</Text>
+            <TouchableOpacity onPress={() => deleteReminder(reminder.id)}>
+              <MaterialIcons name='delete' size={28} />
+            </TouchableOpacity>
+          </View>
         </View>
       ))}
     </View>
